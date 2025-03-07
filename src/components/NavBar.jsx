@@ -5,6 +5,7 @@ import Tabs from "./ui/Tabs";
 import bell from "../assets/bell-regular.svg";
 import Icon from "./ui/Icon";
 import ProfilePhoto from "./ui/ProfilePhoto";
+import search from "../assets/searchIcon1.svg";
 
 function NavBar() {
   const tabs = [
@@ -22,10 +23,16 @@ function NavBar() {
           <div className="hidden sm:block">
             <Search />
           </div>
-          <div className="flex ">
+          <div className="flex">
+            <div
+              className="rounded-full flex
+            justify-center items-center mr-2 sm:hidden cursor-pointer"
+            >
+              <Icon icon={search} w={20} />
+            </div>
             <div
               className="h-10 w-10 rounded-full flex
-            justify-center items-center mr-2 hover:border-white hover:border-2"
+            justify-center items-center mr-2 hover:border-white hover:border-2 cursor-pointer"
             >
               <Icon icon={bell} w={20} />
             </div>
@@ -33,10 +40,18 @@ function NavBar() {
           </div>
         </div>
         <div className="h"></div>
-        <div className="hidden sm:block">
-          {tabs.map((tab, index) => (
-            <Tabs link={tab.link} name={tab.name} key={index} />
-          ))}
+        <div className="hidden sm:flex justify-between items-center">
+          <div className=" cursor-pointer pl-2 hover:scale-125">
+            <div className="h-1 bg-white w-8 m-1 rounded"></div>
+            <div className="h-1 bg-white w-8 m-1 rounded"></div>
+            <div className="h-1 bg-white w-8 m-1 rounded"></div>
+          </div>
+          <div>
+            {tabs.map((tab, index) => (
+              <Tabs link={tab.link} name={tab.name} key={index} />
+            ))}
+          </div>
+          <div></div>
         </div>
       </div>
     </>

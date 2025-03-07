@@ -1,27 +1,39 @@
-import React from "react";
+import React, { useState } from "react";
 import searchIcon from "../../assets/searchIcon.svg";
 import Icon from "./Icon";
 
 function Search(props) {
   const ref = React.useRef({});
+  const [search, setSearch] = useState("");
 
   const handelClick = () => {
     ref.current.focus();
   };
+
+  const handelChange = (e) => {
+    setSearch(e.target.value);
+  };
+
   return (
     <>
       <div
-        className="flex bg-white rounded-sm p-2 search"
+        className={`flex bg-white rounded-sm p-2 search`}
         onClick={handelClick}
       >
         <Icon icon={searchIcon} w={17} />
         <input
-          type="text"
+          type="search"
           placeholder="Search..."
           ref={ref}
-          style={{ borderStyle: "none", all: "unset", padding: "0px 8px" }}
+          style={{
+            borderStyle: "none",
+            all: "unset",
+            padding: "0px 8px",
+            width: "100%",
+          }}
+          className="bg-"
+          onChange={handelChange}
         />
-        <div></div>
       </div>
     </>
   );
