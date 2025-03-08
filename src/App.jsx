@@ -9,18 +9,25 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import LandingPage from "./pages/LandingPage";
+import Login from "./pages/Login";
 
 function App() {
+  const [login, setLogin] = useState(false);
+  const handelClick = () => {
+    setLogin(!login);
+  };
   return (
     <>
       <BrowserRouter>
-        <NavBar />
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <SidebarTrigger className="-ml-1" />
-          </SidebarInset>
-        </SidebarProvider>
+        {login ? (
+          <>
+            <NavBar />
+            <LandingPage />
+          </>
+        ) : (
+          <Login handelClick={handelClick} />
+        )}
       </BrowserRouter>
     </>
   );

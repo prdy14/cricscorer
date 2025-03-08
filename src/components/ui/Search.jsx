@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import searchIcon from "../../assets/searchIcon.svg";
-import Icon from "./Icon";
-
 function Search(props) {
   const ref = React.useRef({});
   const [search, setSearch] = useState("");
@@ -20,7 +18,7 @@ function Search(props) {
         className={`flex bg-white rounded-sm p-2 search`}
         onClick={handelClick}
       >
-        <Icon icon={searchIcon} w={17} />
+        <img src={searchIcon} alt="search" width={17} />
         <input
           type="search"
           placeholder="Search..."
