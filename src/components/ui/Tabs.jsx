@@ -5,7 +5,7 @@ import { Button } from "./button";
 function Tabs(props) {
   return (
     <>
-      <Button className="bg-transparent mr-2 text-md text-gray-300 hover:text-gray-200 hover:bg-green-900 hover:shadow-2xl my-2">
+      <Button className="bg- text-md text-gray-200 hover:bg-white hover:text-[#083f27] hover:shadow-2xl my-1">
         <Link to={props.link}>{props.name}</Link>
       </Button>
     </>

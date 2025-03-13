@@ -13,7 +13,7 @@
 
 .search {
   width: 50vw;
-  max-width: 500px;
+  max-width: 300px;
 }
 
 .searchColor {
@@ -22,4 +22,8 @@
 
 .d {
   background: #ddffe8;
+}
+
+.i {
+  all: unset;
 }

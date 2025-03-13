@@ -1,11 +1,41 @@
 import React, { useState } from "react";
 import { Mail, Lock, User, ArrowRight, Trophy } from "lucide-react";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function Login({ handelClick }) {
+  const { user, login, signup } = useAuth();
   const [isLogin, setIsLogin] = useState(true);
-
   const toggleForm = () => setIsLogin(!isLogin);
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
 
+  const handelChange = (e) => {
+    if (e.target.name == "username") {
+      setUserName(e.target.value);
+    } else if (e.target.name == "email") {
+      setEmail(e.target.value);
+    } else if (e.target.name == "password") {
+      setPassword(e.target.value);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    try {
+      if (isLogin) {
+        await login(email, password);
+        navigate("/dashboard");
+      } else {
+        await signup(username, email, password);
+        setIsLogin(true);
+      }
+    } catch (err) {
+      setError("Invalid credentials");
+    }
+  };
   return (
     <div className="min-h-screen d from-[#426f51]/5 via-white to-[#426f51]/10 flex items-center justify-center p-4">
       <div className="w-full max-w-4xl">
@@ -47,7 +77,7 @@ export default function Login({ handelClick }) {
                   : "Create an account to start scoring matches"}
               </p>
 
-              <form className="space-y-4">
+              <form className="space-y-4" action={handleSubmit}>
                 {!isLogin && (
                   <div className="relative group">
                     <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-[#426f51] h-5 w-5 transition-colors" />
@@ -55,6 +85,9 @@ export default function Login({ handelClick }) {
                       type="text"
                       placeholder="Full Name"
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-[#426f51] transition-colors bg-gray-50 focus:bg-white"
+                      name="username"
+                      onChange={handelChange}
+                      autoComplete=""
                     />
                   </div>
                 )}
@@ -65,6 +98,9 @@ export default function Login({ handelClick }) {
                     type="email"
                     placeholder="Email Address"
                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-[#426f51] transition-colors bg-gray-50 focus:bg-white"
+                    name="email"
+                    autoComplete=""
+                    onChange={handelChange}
                   />
                 </div>
 
@@ -74,6 +110,9 @@ export default function Login({ handelClick }) {
                     type="password"
                     placeholder="Password"
                     className="w-full pl-12 pr-4 py-3 border-2 border-gray-100 rounded-xl focus:outline-none focus:border-[#426f51] transition-colors bg-gray-50 focus:bg-white"
+                    name="password"
+                    autoComplete="current-password"
+                    onChange={handelChange}
                   />
                 </div>
 
@@ -91,7 +130,6 @@ export default function Login({ handelClick }) {
                 <button
                   type="submit"
                   className="w-full bg-[#426f51] text-white py-3 rounded-xl hover:bg-[#426f51]/90 transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2 group font-medium text-lg"
-                  onClick={handelClick}
                 >
                   {isLogin ? "Sign In to Score" : "Create Account"}
                   <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />

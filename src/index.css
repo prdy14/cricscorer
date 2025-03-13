@@ -118,7 +118,21 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+
+
   }
+
+}
+
+@font-face {
+  font-family: "Roboro-Regular";
+  src: local("Roboro-Regular"), url('./assets/fonts/Roboto-Regular.ttf')
+}
+
+@font-face {
+  font-family: "Roboto_SemiCondensed-Thin";
+  src: local("Roboto_SemiCondensed-Thin"), url('./assets/fonts/Roboto_SemiCondensed-Thin.ttf')
 }
