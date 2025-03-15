@@ -9,6 +9,7 @@ function LandingPage() {
       {/* Navigation */}
       <NavBar />
       {/* Hero Section */}
+
       <div className="relative overflow-hidden">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1531415074968-036ba1b575da?q=80&w=2000&auto=format&fit=crop')] bg-cover bg-center">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px]"></div>

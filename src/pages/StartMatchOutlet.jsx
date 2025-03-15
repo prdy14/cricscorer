@@ -4,6 +4,7 @@ import { Button } from "../components/ui/button";
 import AlertDialogDemo from "../components/Alert";
 import { useLocation } from "react-router-dom";
 import { createMatch } from "../context/MatchContext";
+import StartInnings from "./StartInnings";
 
 function StartMatchOutlet() {
   const location = useLocation();
@@ -20,8 +21,10 @@ function StartMatchOutlet() {
 
   return (
     <div>
-      {matchStarted ? (
-        <>matchStarted</>
+      {true ? (
+        <>
+          <StartInnings />
+        </>
       ) : (
         <div className="flex justify-center flex-col">
           <div className=" z-50 sticky top-0 flex items-center  bg-[#426f51] px-2 sm:px-6">

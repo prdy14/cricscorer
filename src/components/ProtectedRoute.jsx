@@ -4,11 +4,6 @@ import { useAuth } from "../context/AuthContext";
 export function ProtectedRoute() {
   const { user, loading } = useAuth();
 
-  return (
-    <>
-      <Outlet />
-    </>
-  );
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -20,4 +15,9 @@ export function ProtectedRoute() {
   if (!user) {
     return <Navigate to="/login" />;
   }
+  return (
+    <>
+      <Outlet />
+    </>
+  );
 }
