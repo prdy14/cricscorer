@@ -18,7 +18,7 @@ import {
 import { Venus } from "lucide-react";
 
 function StartMatch() {
-  const { formdata, handelInputChange, startMatch } = createMatch();
+  const { formdata, handelInputChange } = createMatch();
 
   const navigate = useNavigate();
 
@@ -29,8 +29,16 @@ function StartMatch() {
   const staryMatch = async (e) => {
     const res = await axios.post("/matches/creatematch", {
       teams: [
-        { id: formdata.teamA.teamId, name: formdata.teamA.teamName },
-        { id: formdata.teamB.teamId, name: formdata.teamB.teamName },
+        {
+          id: formdata.teamA.teamId,
+          name: formdata.teamA.teamName,
+          player: formdata.teamA.players,
+        },
+        {
+          id: formdata.teamB.teamId,
+          name: formdata.teamB.teamName,
+          players: formdata.teamB.players,
+        },
       ],
       venue: formdata.venue,
       optTo: formdata.optto,
@@ -40,7 +48,7 @@ function StartMatch() {
           ? formdata.teamA.teamId
           : formdata.teamB.teamId,
     });
-    startMatch(res.data);
+    navigate(`/updatematch/${12}`);
     console.log(res.data);
   };
   return (

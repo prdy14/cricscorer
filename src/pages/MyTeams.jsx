@@ -80,7 +80,10 @@ function MyTeams() {
             </div>
           );
         })}
+      </div>
+      <div className="flex justify-center w-full">
         <Button
+          className="w-20 hover:bg-white text-white px-6 py-3 rounded-lg  font-semibold transition-colors shadow-lg bg-[#426f51] hover:text-[#083f27] cursor-pointer"
           onClick={() => {
             if (selectedTeams.length < 2) {
               alert("Please select at least 2 teams");
@@ -95,7 +98,9 @@ function MyTeams() {
             });
             navigate("/startmatch");
           }}
-        />
+        >
+          ok
+        </Button>
       </div>
     </>
   );

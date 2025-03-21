@@ -5,7 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 export default function Login({ handelClick }) {
   const { user, login, signup } = useAuth();
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const toggleForm = () => setIsLogin(!isLogin);
   const [username, setUserName] = useState("");
   const [email, setEmail] = useState("");

@@ -27,3 +27,47 @@
 .i {
   all: unset;
 }
+
+.dot {
+  background-color: #426f5115;
+}
+
+.four {
+  background-color: #426f51b3
+}
+
+.six {
+  background-color: #426f51e4
+}
+
+.out {
+  background-color: #d33333a0;
+}
+
+.runs {
+  background-color: #426f5158;
+}
+
+.wd {
+  background-color: #e88a1751;
+}
+
+.nb {
+  background-color: #e88a1790;
+}
+
+.bye {
+  background-color: #426f5138;
+}
+
+.lb {
+  background-color: #426f5182;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.hide {
+  visibility: hidden;
+}

@@ -7,7 +7,6 @@ export function MatchProvider({ children }) {
     teamA: null,
     teamB: null,
   });
-  const [match, setMatch] = useState(null);
 
   const handelInputChange = (e) => {
     const { name, value } = e.target;
@@ -15,23 +14,12 @@ export function MatchProvider({ children }) {
 
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-  const [matchStarted, setMatchStarted] = useState(false);
-  const startMatch = (match) => {
-    setMatch(match);
-    setMatchStarted(true);
-  };
-  const endMatch = () => {
-    setMatchStarted(false);
-  };
+
   return (
     <MatchContext.Provider
       value={{
-        startMatch,
-        endMatch,
         formdata,
         handelInputChange,
-        match,
-        matchStarted,
       }}
     >
       {children}

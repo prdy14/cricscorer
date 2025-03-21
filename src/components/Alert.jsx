@@ -15,7 +15,12 @@ export default function AlertDialogDemo({ title, onCancel, onContinue }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="outline">{title}</Button>
+        <Button
+          variant="outline"
+          className="bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] border-2 border-[#426f51] text-white "
+        >
+          {title}
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
@@ -26,7 +31,10 @@ export default function AlertDialogDemo({ title, onCancel, onContinue }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onContinue} className="bg-[#426f51]">
+          <AlertDialogAction
+            onClick={onContinue}
+            className="bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] border-2 border-[#426f51]"
+          >
             Continue
           </AlertDialogAction>
         </AlertDialogFooter>
