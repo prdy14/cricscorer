@@ -21,234 +21,42 @@ import InputUpdate from "../components/ui/InputUpdate";
 import { Button } from "../components/ui/button";
 import InputDialog from "../components/ui/InputDialog";
 import InputOut from "../components/ui/InputOut";
-import { useNavigate, useParams } from "react-router-dom";
+import { updateMatch } from "../context/UpdateMatchContext";
 
 function UpdateScore() {
-  const { id } = useParams();
-  const [battingTeam, SetBattingTeam] = useState({
-    id: 1,
-    name: "RCB",
-    player: [
-      {
-        id: 5,
-        name: "admin",
-      },
-      {
-        id: 2,
-        name: "admin",
-      },
-      {
-        id: 1,
-        name: "praveenkandela",
-      },
-      {
-        id: 6,
-        name: "sathevva",
-      },
-    ],
-  });
-  const [bowlingTeam, setBowlingTeam] = useState({
-    id: 1,
-    name: "RCB",
-    player: [
-      {
-        id: 7,
-        name: "admin2",
-      },
-      {
-        id: 9,
-        name: "admin11",
-      },
-      {
-        id: 4,
-        name: "praveenkandela",
-      },
-      {
-        id: 2,
-        name: "sathevva",
-      },
-    ],
-  });
-  const [striker, setStriker] = useState({
-    id: null,
-    name: "",
-    runs: 0,
-    balls: 0,
-    fours: 0,
-    sixs: 0,
-  });
-  const [nonStriker, setNonStriker] = useState({
-    id: null,
-    name: "",
-    runs: 0,
-    balls: 0,
-    fours: 0,
-    sixs: 0,
-  });
-  const [bowler, setBowler] = useState({
-    id: null,
-    name: "",
-    overs: 0,
-    runs: 0,
-    wickets: 0,
-    madiens: 0,
-    eco: 0,
-  });
-  const [flag, setFlag] = useState(false);
-  const [balls, setBalls] = useState([]);
-  const [ballNo, setBallNo] = useState(0);
-  const [score, setScore] = useState(0);
-  const [wickets, setWickets] = useState(0);
-  const [over, SetOver] = useState(0);
-  const [battingCompleted, setBattingCompleted] = useState([]);
+  const {
+    battingTeam,
+    bowlingTeam,
+    striker,
+    nonStriker,
+    bowler,
+    balls,
+    over,
+    ballNo,
+    setOver,
+    score,
+    wickets,
+    batters,
+    started,
+    setStarted,
+    bowlers,
+    matchDetails,
+    handelRuns,
+    addWideRuns,
+    addNbRuns,
+    addByes,
+    addBall,
+    setStriker,
+    setBowler,
+    setNonStriker,
+    setBatters,
+  } = updateMatch();
 
-  useEffect(() => {
-    async function getMatchDetails(id) {
-      const response = await axios.get(`/innings/${id}`);
-      setMatch(response.data);
-    }
-    console.log("use");
-    // getMatchDetails(id);
-  }, [id]);
-
-  const addBall = (value, runs) => {
-    setBalls((prev) => [...prev, { value: value, runs: runs }]);
-  };
-
-  const changeStriker = () => {
-    const newStriker = { ...striker };
-    setStriker({ ...nonStriker });
-    setNonStriker({ ...newStriker });
-  };
-  const handelRuns = (r) => {
-    let val = "dot";
-    if (r == 4) {
-      val = "four";
-    } else if (r == 6) {
-      val = "six";
-    }
-    if (r % 2 == 0) {
-      if (ballNo == 5) {
-        changeStriker();
-        setNonStriker((prev) => {
-          return { ...prev, balls: prev.balls + 1, runs: prev.runs + r };
-        });
-      } else {
-        setStriker((prev) => {
-          return {
-            ...prev,
-            balls: prev.balls + 1,
-            runs: prev.runs + r,
-            fours: r == 4 ? prev.fours + 1 : prev.fours,
-            sixs: r == 6 ? prev.sixs + 1 : prev.sixs,
-          };
-        });
-      }
-    } else {
-      if (ballNo == 5) {
-        setStriker((prev) => {
-          return {
-            ...prev,
-            balls: prev.balls + 1,
-            runs: prev.runs + r,
-          };
-        });
-      } else {
-        changeStriker();
-        setNonStriker((prev) => {
-          return { ...prev, balls: prev.balls + 1, runs: prev.runs + r };
-        });
-      }
-    }
-    addBall(val, r);
-    setBallNo((prev) => {
-      if (prev == 5) {
-        SetOver((no) => no + 1);
-        setBalls([]);
-        return 0;
-      } else {
-        return prev + 1;
-      }
-    });
-
-    setScore((prev) => prev + r);
-    setBowler((prev) => {
-      return {
-        ...prev,
-        overs:
-          prev.overs + ((prev.overs * 10).toFixed(0) % 10 == 5 ? 0.5 : 0.1),
-        runs: prev.runs + r,
-      };
-    });
-  };
-  const addWideRuns = (r) => {
-    setScore((prev) => prev + 1 + +r);
-    if (r % 2 == 1) {
-      changeStriker();
-    }
-    addBall("wd", r);
-  };
-  const addNbRuns = (r) => {
-    setScore((prev) => prev + 1 + +r);
-    if (r % 2 == 1) {
-      changeStriker();
-      setNonStriker((prev) => {
-        return { ...prev, balls: prev.balls + 1, runs: prev.runs + +r };
-      });
-    } else {
-      setStriker((prev) => {
-        return { ...prev, balls: prev.balls + 1, runs: prev.runs + +r };
-      });
-    }
-    setBowler((prev) => {
-      return { ...prev, runs: prev.runs + +r };
-    });
-    addBall("nb", r);
-  };
-  const addByes = (r) => {
-    setScore((prev) => prev + +r);
-    if (r % 2 == 1) {
-      if (ballNo == 5) {
-        setStriker((prev) => {
-          return {
-            ...prev,
-            balls: prev.balls + 1,
-          };
-        });
-      } else {
-        changeStriker();
-        setNonStriker((prev) => {
-          return { ...prev, balls: prev.balls + 1 };
-        });
-      }
-    } else {
-      setStriker((prev) => {
-        return { ...prev, balls: prev.balls + 1 };
-      });
-    }
-    setBallNo((prev) => {
-      if (prev == 5) {
-        SetOver((no) => no + 1);
-        setBalls([]);
-        return 0;
-      } else {
-        return prev + 1;
-      }
-    });
-    setBowler((prev) => {
-      return {
-        ...prev,
-        overs:
-          prev.overs + ((prev.overs * 10).toFixed(0) % 10 == 5 ? 0.5 : 0.1),
-      };
-    });
-    addBall("lb", r);
-  };
-  const navigate = useNavigate();
+  console.log(battingTeam);
 
   return (
     <>
-      {!flag ? (
+      {!started ? (
         <>
           <div>
             <h1>Select Striker</h1>
@@ -264,8 +72,8 @@ function UpdateScore() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {battingTeam.player
-                    .filter((player) => battingCompleted.indexOf(player.id) < 0)
+                  {battingTeam?.players
+                    .filter((player) => batters.indexOf(player.id) < 0)
                     .map((player, index) => {
                       return (
                         <SelectItem
@@ -290,10 +98,10 @@ function UpdateScore() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {battingTeam.player
+                  {battingTeam?.players
                     .filter(
                       (player) =>
-                        battingCompleted.indexOf(player.id) < 0 &&
+                        batters.indexOf(player.id) < 0 &&
                         striker?.id != player.id
                     )
                     .map((player, index) => {
@@ -313,6 +121,7 @@ function UpdateScore() {
             <Select
               onValueChange={(value) => {
                 setBowler({ ...bowler, ...value });
+                setStarted(true);
               }}
             >
               <SelectTrigger className="w-[180px]">
@@ -320,7 +129,7 @@ function UpdateScore() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  {bowlingTeam.player.map((player, index) => {
+                  {bowlingTeam?.players.map((player, index) => {
                     return (
                       <SelectItem
                         value={player}
@@ -334,9 +143,9 @@ function UpdateScore() {
               </SelectContent>
             </Select>
             <Button
-              onClick={() => {
-                setBattingCompleted((prev) => [...prev, striker, nonStriker]);
-                setFlag(true);
+              onClick={async () => {
+                setBatters((prev) => [...prev, striker, nonStriker]);
+                setStarted(true);
               }}
             />
           </div>

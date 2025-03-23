@@ -17,9 +17,11 @@ import { ProtectedRoute } from "./components/ProtectedRoute.jsx";
 import StartMatchOutlet from "./pages/StartMatchOutlet.jsx";
 import AddTeam from "./pages/AddTeam.jsx";
 import MyTeams from "./pages/MyTeams.jsx";
-import { MatchProvider } from "./context/MatchContext.jsx";
+
 import Home from "./pages/Home.jsx";
 import UpdateScore from "./pages/UpdateScore.jsx";
+import UpdateScoreLayout from "./pages/UpdateScoreLayout.jsx";
+import SelectStriker from "./components/SelectStriker.jsx";
 
 function App() {
   return (
@@ -39,8 +41,11 @@ function App() {
                 <Route path="addteam" element={<AddTeam />} />
               </Route>
             </Route>
+            <Route path="/updatematch/:matchId" element={<UpdateScoreLayout />}>
+              <Route path="" element={<UpdateScore />} />
+              <Route path="selectplayers" element={<SelectStriker />} />
+            </Route>
           </Route>
-          <Route path="updatematch/:id" element={<UpdateScore />}></Route>
         </Routes>
       </AuthProvider>
     </BrowserRouter>

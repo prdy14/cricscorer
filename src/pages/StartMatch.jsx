@@ -48,7 +48,7 @@ function StartMatch() {
           ? formdata.teamA.teamId
           : formdata.teamB.teamId,
     });
-    navigate(`/updatematch/${12}`);
+    navigate(`/updatematch/${res.data.id}`);
     console.log(res.data);
   };
   return (

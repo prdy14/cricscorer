@@ -27,7 +27,7 @@ export default function Login({ handelClick }) {
     try {
       if (isLogin) {
         await login(email, password);
-        navigate("/dashboard");
+        navigate("/");
       } else {
         await signup(username, email, password);
         setIsLogin(true);

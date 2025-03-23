@@ -1,89 +1,64 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
 
-function SelectStriker() {
+function SelectStriker({
+  teamA = ["praveen1", "prave1en", "p1raveen"],
+  teamB = ["1praveen", "1raveen", "pr1aveen"],
+}) {
+  const [striker, setStriker] = useState(null);
+  const [nonStriker, setNonStriker] = useState(null);
+  const [bowler, setBowler] = useState(null);
   return (
-    <div>
-      <h1>Select Striker</h1>
-      <Select
-        onValueChange={(value) => {
-          setStriker((val) => {
-            return { ...val, ...value };
-          });
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a Striker" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {battingTeam.player
-              .filter((player) => battingCompleted.indexOf(player.id) < 0)
-              .map((player, index) => {
-                return (
-                  <SelectItem value={player} key={`${player.name}-${index}`}>
-                    {player.name}
-                  </SelectItem>
-                );
-              })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <h1>Select Non-Striker</h1>
-      <Select
-        onValueChange={(value) => {
-          setNonStriker((val) => ({ ...val, ...value }));
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a Non-Striker" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {battingTeam.player
-              .filter(
-                (player) =>
-                  battingCompleted.indexOf(player.id) < 0 &&
-                  striker?.id != player.id
-              )
-              .map((player, index) => {
-                return (
-                  <SelectItem value={player} key={`${player.name}-${index}`}>
-                    {player.name}
-                  </SelectItem>
-                );
-              })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <h1>Select Bowler</h1>
-      <Select
-        onValueChange={(value) => {
-          setBowler({ ...bowler, ...value });
-        }}
-      >
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Select a Bowler" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            {bowlingTeam.player.map((player, index) => {
-              return (
-                <SelectItem value={player} key={`${player.name}-d${index}`}>
-                  {player.name}
-                </SelectItem>
-              );
-            })}
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-      <Button
-        onClick={() => {
-          setBattingCompleted((prev) => [...prev, striker, nonStriker]);
-          setFlag(true);
-        }}
-      />
-    </div>
+    <>
+      <h2 className="text-xl font-bold">Select Players</h2>
+
+      <h3 className="text-lg font-semibold">Select Striker (Team A)</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {teamA.map((player) => (
+          <Card
+            key={player}
+            className={`p-2 text-center shadow-md cursor-pointer ${
+              striker === player ? "bg-blue-500 text-white" : ""
+            }`}
+            onClick={() => setStriker(player)}
+          >
+            {player}
+          </Card>
+        ))}
+      </div>
+
+      <h3 className="text-lg font-semibold">Select Non-Striker (Team A)</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {teamA
+          .filter((player) => player !== striker)
+          .map((player) => (
+            <Card
+              key={player}
+              className={`p-2 text-center shadow-md cursor-pointer ${
+                nonStriker === player ? "bg-green-500 text-white" : ""
+              }`}
+              onClick={() => setNonStriker(player)}
+            >
+              {player}
+            </Card>
+          ))}
+      </div>
+      <h3 className="text-lg font-semibold">Select Bowler (Team B)</h3>
+      <div className="grid grid-cols-2 gap-2">
+        {teamB.map((player) => (
+          <Card
+            key={player}
+            className={`p-2 text-center shadow-md cursor-pointer ${
+              bowler === player ? "bg-red-500 text-white" : ""
+            }`}
+            onClick={() => setBowler(player)}
+          >
+            {player}
+          </Card>
+        ))}
+      </div>
+    </>
   );
 }
 
-export default SelectStriker
+export default SelectStriker;
