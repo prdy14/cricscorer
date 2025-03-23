@@ -210,7 +210,7 @@ function UpdateScore() {
                 return (
                   <Ball
                     key={`ball-${index}`}
-                    value={ball.value}
+                    value={ball.type}
                     runs={ball.runs}
                   />
                 );
