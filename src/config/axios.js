@@ -28,8 +28,8 @@ instance.interceptors.response.use(
   (error) => {
     if (error.response && error.response.status === 401) {
       // Token is expired or invalid
-      // localStorage.removeItem("token");
-      // window.location.href = "/login";
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
     return Promise.reject(error);
   }
