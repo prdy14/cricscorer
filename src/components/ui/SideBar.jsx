@@ -70,11 +70,8 @@ export function SideBar() {
           <div className="bg-[#264f3912] p-2 font-semibold text-sm">
             MY STATS
           </div>
-          <Link
-            className="p-2 text-md hover:bg-[#426f5153]"
-            to={"/updatematch"}
-          >
-            My matches
+          <Link className="p-2 text-md hover:bg-[#426f5153]" to={"/login"}>
+            Login
           </Link>
           <Link
             className="p-2 text-md hover:bg-[#426f5153]"

@@ -35,7 +35,7 @@ export default function Scorecard() {
                 console.log("hi");
                 return (
                   <BatterPerformance
-                    runs={striker.runs}
+                    runs={striker?.runs}
                     balls={striker?.balls}
                     fours={striker?.fours}
                     sixs={striker?.sixes}
@@ -47,7 +47,7 @@ export default function Scorecard() {
                     name={striker?.name}
                     score={true}
                     key={index}
-                    out={striker.out}
+                    out={striker?.out}
                   />
                 );
               })}
@@ -87,12 +87,12 @@ export default function Scorecard() {
         <AccordionItem value="item-1">
           <AccordionTrigger className="hover: decoration-0">
             <div className="flex justify-between w-full">
-              <div>{matchDetails.innings2 ? teamA?.name : teamB?.name}</div>
-              {matchDetails.innings2 ? (
+              <div>{matchDetails?.innings2 ? teamA?.name : teamB?.name}</div>
+              {matchDetails?.innings2 ? (
                 <div>
                   {innings2?.score}-{innings2?.wickets} (
-                  {innings2?.overs.length - 1}.
-                  {innings2?.overs.find((ov) => !ov.completed).ballCount})
+                  {innings2?.overs?.length - 1}.
+                  {innings2?.overs?.find((ov) => !ov.completed)?.ballCount})
                 </div>
               ) : (
                 <div>Not Started</div>
@@ -100,14 +100,14 @@ export default function Scorecard() {
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            {matchDetails.innings2 && (
+            {matchDetails?.innings2 && (
               <div>
                 <BatterTitle />
                 {innings2?.batters?.map((striker, index) => {
                   console.log("hi");
                   return (
                     <BatterPerformance
-                      runs={striker.runs}
+                      runs={striker?.runs}
                       balls={striker?.balls}
                       fours={striker?.fours}
                       sixs={striker?.sixes}
@@ -119,7 +119,7 @@ export default function Scorecard() {
                       name={striker?.name}
                       score={true}
                       key={index}
-                      out={striker.out}
+                      out={striker?.out}
                     />
                   );
                 })}
@@ -127,7 +127,7 @@ export default function Scorecard() {
                 <div>
                   total score is {innings2?.score}-{innings2?.wickets} (
                   {innings2?.overs.length - 1}.
-                  {innings2?.overs.find((ov) => !ov.completed).ballCount})
+                  {innings2?.overs.find((ov) => !ov.completed)?.ballCount})
                 </div>
 
                 <BowlerTitle />
