@@ -1,43 +1,25 @@
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import instance from "../config/axios";
 
 const UpdateMatchContext = createContext(undefined);
 
 export function UpdateMatchProvider({ children }) {
+  const location = useLocation();
+  const path = useRef(location.pathname);
+
   const [battingTeam, setBattingTeam] = useState(null);
   const [bowlingTeam, setBowlingTeam] = useState(null);
-  const [striker, setStriker] = useState({
-    id: null,
-    name: "",
-    runs: 0,
-    balls: 0,
-    fours: 0,
-    sixs: 0,
-  });
-  const [nonStriker, setNonStriker] = useState({
-    id: null,
-    name: "",
-    runs: 0,
-    balls: 0,
-    fours: 0,
-    sixs: 0,
-  });
-  const [bowler, setBowler] = useState({
-    id: null,
-    name: "",
-    overs: 0,
-    runs: 0,
-    wickets: 0,
-    madiens: 0,
-    eco: 0,
-  });
+  const inningsId = useRef(null);
+  const [striker, setStriker] = useState(null);
+  const [nonStriker, setNonStriker] = useState(null);
+  const [bowler, setBowler] = useState(null);
   const [balls, setBalls] = useState([]);
   const [ballNo, setBallNo] = useState(0);
   const [score, setScore] = useState(0);
   const [wickets, setWickets] = useState(0);
   const [over, setOver] = useState(0);
-  const [overs, setOvers] = useState(0);
+  const [overId, setOverId] = useState(0);
   const [batters, setBatters] = useState([]);
   const [bowlers, setBowlers] = useState([]);
   const [matchDetails, setMatchDetails] = useState({
@@ -55,42 +37,134 @@ export function UpdateMatchProvider({ children }) {
     const getTeam = async (batId, bowId) => {
       const batRes = await instance.get(`/teams/team/${batId}`);
       const bowRes = await instance.get(`/teams/team/${bowId}`);
-      console.log(batRes.data, bowRes.data);
-
       setBattingTeam(batRes.data);
       setBowlingTeam(bowRes.data);
     };
     const getDetails = async () => {
-      console.log(matchId);
       const match = await instance.get(`/matches/getmatch/${matchId}`);
       setMatchDetails(match.data);
-      console.log(match.data);
       let inningsData;
       if (!match.data.innings2) {
-        inningsData = await instance.get(`/matches/${matchId}/innings1`);
+        inningsData = (await instance.get(`/matches/${matchId}/innings1`)).data;
       } else {
-        inningsData = await instance.get(`/matches/${matchId}/innings2`);
+        inningsData = (await instance.get(`/matches/${matchId}/innings2`)).data;
       }
-      console.log(inningsData.data);
-      setScore(inningsData.data.runs);
-      setOver(inningsData.data.overs.length);
-      setOvers(inningsData.data.overs);
-      setWickets(inningsData.data.wickets);
-      setStarted(inningsData.data.started);
-      setBallNo(
-        inningsData.data.overs[inningsData.data.overs.length - 1]?.ballCount ||
-          0
+      console.log(inningsData);
+      setScore(inningsData.score);
+      const overs = inningsData.overs;
+      setOver((prev) => {
+        let c = 0;
+        overs.forEach((ov) => {
+          if (ov.completed) {
+            c += 1;
+          }
+        });
+        return c;
+      });
+      setBalls(overs.find((ov) => !ov.completed)?.balls || []);
+      setBallNo(overs.find((ov) => !ov.completed)?.ballCount || 0);
+      setOverId(overs.find((ov) => !ov.completed)?.id || 0);
+      setWickets(inningsData.wickets);
+      setStarted(inningsData.started);
+      inningsId.current = inningsData.id;
+      setStriker(inningsData.batters.find((bat) => bat.striker) || null);
+      setNonStriker(
+        inningsData.batters.find((bow) => !bow.out && !bow.striker) || null
       );
-      setBalls(
-        inningsData.data.overs[inningsData.data.overs.length - 1]?.balls || []
-      );
-      setBatters(inningsData.data.batters);
-      setBowlers(inningsData.data.bowlers);
-      getTeam(inningsData.data.battingTeamId, inningsData.data.bowlingTeamId);
+      setBowler(inningsData.bowlers.find((bow) => bow.bowling));
+      setBatters(inningsData.batters);
+      setBowlers(inningsData.bowlers);
+      getTeam(inningsData.battingTeamId, inningsData.bowlingTeamId);
     };
 
     getDetails();
-  }, [matchId]);
+  }, [matchDetails.innings2]);
+
+  useEffect(() => {
+    const updateScore = async () => {
+      console.log(inningsId.current);
+      const updateInnings = await instance.post(`/matches/updateScore`, {
+        id: inningsId.current,
+        score: score,
+        wickets: wickets,
+      });
+      const updateStriker = await instance.post(
+        `/matches/updateBatter`,
+        striker
+      );
+      const updateNonStriker = await instance.post(
+        `/matches/updateBatter`,
+        nonStriker
+      );
+      if (bowler) {
+        const updateBowler = await instance.post(
+          `/matches/updateBowler`,
+          bowler
+        );
+        console.log(updateBowler);
+        const res = await instance.post(`/matches/updatescore/addball`, {
+          id: overId,
+          ballNo: ballNo,
+          balls: balls,
+        });
+      }
+    };
+    updateScore();
+    const updateOver = async () => {
+      const dat = await instance.put(`/matches/overcomplete/${overId}`);
+      setBowler(null);
+      changeStriker();
+    };
+    if (ballNo == 6) {
+      console.log("updateScoe");
+      updateOver();
+      setBallNo(0);
+      setOver((prev) => prev + 1);
+    }
+    if (!matchDetails.innings2 && over == matchDetails.overs) {
+      const res = instance.post("/matches/startsecondInnings", {
+        id: matchDetails.id,
+        target: score,
+      });
+      setMatchDetails((prev) => {
+        return { ...prev, innings2: true, target: score };
+      });
+      console.log(res.data);
+    }
+    if ((matchDetails.innings2 && over == matchDetails.overs) || score) {
+      if (score < matchDetails.target) {
+        const res = instance.post("/matches/endmatch", {});
+      }
+    }
+  }, [balls]);
+
+  const handelSetStriker = async (bat) => {
+    const srikerRes = await instance.post(
+      `/matches/${inningsId.current}/setStriker`,
+      { playerId: bat.playerId, name: bat.name }
+    );
+    setStriker(srikerRes.data);
+  };
+
+  const handelSetNonStriker = async (nonBat) => {
+    const nonSrikerRes = await instance.post(
+      `/matches/${inningsId.current}/setnonStriker`,
+      { playerId: nonBat.playerId, name: nonBat.name }
+    );
+    setNonStriker(nonSrikerRes.data);
+  };
+  const handelSetBowler = async (bow) => {
+    const bowlerRes = await instance.post(
+      `/matches/${inningsId.current}/setbowler`,
+      { playerId: bow.playerId, name: bow.name }
+    );
+    const startOver = await instance.post(
+      `/matches/${inningsId.current}/startOver/${bowlerRes.data.id}`
+    );
+    setBowler(bowlerRes.data);
+    setOverId(startOver.data.id);
+    setBalls([]);
+  };
 
   const addBall = async (value, runs) => {
     setBalls((prev) => [...prev, { type: value, runs: runs }]);
@@ -98,10 +172,10 @@ export function UpdateMatchProvider({ children }) {
 
   const changeStriker = () => {
     const newStriker = { ...striker };
-    setStriker({ ...nonStriker });
-    setNonStriker({ ...newStriker });
+    setStriker({ ...nonStriker, striker: true });
+    setNonStriker({ ...newStriker, striker: false });
   };
-  const handelRuns = (r) => {
+  const handelRuns = async (r) => {
     let val = "dot";
     if (r == 4) {
       val = "four";
@@ -109,49 +183,21 @@ export function UpdateMatchProvider({ children }) {
       val = "six";
     }
     if (r % 2 == 0) {
-      if (ballNo == 5) {
-        changeStriker();
-        setNonStriker((prev) => {
-          return { ...prev, balls: prev.balls + 1, runs: prev.runs + r };
-        });
-      } else {
-        setStriker((prev) => {
-          return {
-            ...prev,
-            balls: prev.balls + 1,
-            runs: prev.runs + r,
-            fours: r == 4 ? prev.fours + 1 : prev.fours,
-            sixs: r == 6 ? prev.sixs + 1 : prev.sixs,
-          };
-        });
-      }
+      setStriker((prev) => {
+        return {
+          ...prev,
+          balls: prev.balls + 1,
+          runs: prev.runs + r,
+          fours: r == 4 ? prev.fours + 1 : prev.fours,
+          sixes: r == 6 ? prev.sixes + 1 : prev.sixes,
+        };
+      });
     } else {
-      if (ballNo == 5) {
-        setStriker((prev) => {
-          return {
-            ...prev,
-            balls: prev.balls + 1,
-            runs: prev.runs + r,
-          };
-        });
-      } else {
-        changeStriker();
-        setNonStriker((prev) => {
-          return { ...prev, balls: prev.balls + 1, runs: prev.runs + r };
-        });
-      }
+      changeStriker();
+      setNonStriker((prev) => {
+        return { ...prev, balls: prev.balls + 1, runs: prev.runs + r };
+      });
     }
-    addBall(val, r);
-    setBallNo((prev) => {
-      if (prev == 5) {
-        setOver((no) => no + 1);
-        setBalls([]);
-        return 0;
-      } else {
-        return prev + 1;
-      }
-    });
-
     setScore((prev) => prev + r);
     setBowler((prev) => {
       return {
@@ -161,6 +207,8 @@ export function UpdateMatchProvider({ children }) {
         runs: prev.runs + r,
       };
     });
+    setBallNo((prev) => prev + 1);
+    addBall(val, r);
   };
   const addWideRuns = (r) => {
     setScore((prev) => prev + 1 + +r);
@@ -207,15 +255,6 @@ export function UpdateMatchProvider({ children }) {
         return { ...prev, balls: prev.balls + 1 };
       });
     }
-    setBallNo((prev) => {
-      if (prev == 5) {
-        SetOver((no) => no + 1);
-        setBalls([]);
-        return 0;
-      } else {
-        return prev + 1;
-      }
-    });
     setBowler((prev) => {
       return {
         ...prev,
@@ -223,6 +262,7 @@ export function UpdateMatchProvider({ children }) {
           prev.overs + ((prev.overs * 10).toFixed(0) % 10 == 5 ? 0.5 : 0.1),
       };
     });
+    setBallNo((prev) => prev + 1);
     addBall("lb", r);
   };
 
@@ -232,9 +272,11 @@ export function UpdateMatchProvider({ children }) {
         setBatters,
         battingTeam,
         bowlingTeam,
+        handelSetStriker,
         setStriker,
         setNonStriker,
         setBowler,
+        path,
         striker,
         nonStriker,
         bowler,
@@ -245,6 +287,7 @@ export function UpdateMatchProvider({ children }) {
         wickets,
         batters,
         bowlers,
+        setBowlers,
         matchDetails,
         handelRuns,
         addWideRuns,
@@ -254,6 +297,9 @@ export function UpdateMatchProvider({ children }) {
         setOver,
         started,
         setStarted,
+        handelSetBowler,
+        handelSetNonStriker,
+        navigate,
       }}
     >
       {children}

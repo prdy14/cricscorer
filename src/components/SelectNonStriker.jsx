@@ -1,42 +1,46 @@
 import React, { useEffect, useState } from "react";
 import { updateMatch } from "../context/UpdateMatchContext";
-import { useNavigate } from "react-router-dom";
-import { Button } from "./ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "./ui/button";
 
-function SelectStriker() {
-  const { battingTeam, batters, handelSetStriker, striker, navigate, path } =
-    updateMatch();
-
-  const [str, setStr] = useState(striker);
-
+function SelectNonStriker() {
+  const {
+    battingTeam,
+    striker,
+    batters,
+    handelSetNonStriker,
+    navigate,
+    nonStriker,
+    path,
+  } = updateMatch();
   useEffect(() => {
     const rout = path.current.split("/");
-    console.log(striker);
     rout.pop();
     const p = rout.join("/");
-    if (striker) {
+    if (nonStriker) {
       navigate(p + "/updateScore");
     }
-  }, [striker]);
-
+  }, [nonStriker]);
+  const [nonStr, setNonStr] = useState(nonStriker);
   return (
     <div>
-      <h3 className="text-sm md:text-lg lg:text-xl font-semibold">
-        Select Striker for {battingTeam?.name}
+      <h3 className="text-lg font-semibold">
+        Select Non-Striker {battingTeam?.name}
       </h3>
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-2">
+      <div className="grid grid-cols-2 gap-2">
         {battingTeam?.players
-          .filter((player) => batters.indexOf(player.id) < 0)
+          .filter(
+            (player) =>
+              batters.indexOf(player.id) < 0 && striker?.playerId != player.id
+          )
           .map((player) => (
             <Card
-              key={player.id + "kh"}
+              key={player.id + " jd"}
               className={`p-2 text-center shadow-md cursor-pointer ${
-                str?.playerId === player.id ? "bg-blue-500 text-white" : ""
+                nonStr?.playerId === player.id ? "bg-blue-500  text-white" : ""
               }`}
               onClick={() =>
-                setStr((prev) => {
-                  console.log(prev);
+                setNonStr((prev) => {
                   return { ...player, playerId: player.id };
                 })
               }
@@ -50,10 +54,10 @@ function SelectStriker() {
           const rout = path.current.split("/");
           rout.pop();
           const p = rout.join("/");
-          if (striker) {
+          if (nonStriker) {
             navigate(p + "/updateScore");
           }
-          handelSetStriker(str);
+          handelSetNonStriker(nonStr);
         }}
       >
         ok
@@ -62,4 +66,4 @@ function SelectStriker() {
   );
 }
 
-export default SelectStriker;
+export default SelectNonStriker;

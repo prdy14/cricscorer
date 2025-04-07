@@ -38,8 +38,14 @@ function AddTeam() {
         });
 
         const player = res.data;
+        console.log(player);
         // Ensure setAddPlayer updates before using it
         setAddPlayer(player);
+        const add = await axios.put(
+          `/teams/addPlayer/${team.id}/${player.id}`,
+          {}
+        );
+        console.log(add.data);
 
         // Use a callback inside setPlayers to ensure it gets the latest state
         setPlayers((prevPlayers) => [...prevPlayers, player]);

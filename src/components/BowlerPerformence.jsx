@@ -10,7 +10,7 @@ function BowlerPerformence({
   className,
 }) {
   return (
-    <div className={`flex text-slate-800 ${className}`}>
+    <div className={`flex text-slate-800 ${className} py-2`}>
       <p className="flex-3/8 px-2 py-1 font-semibold text-[#22753e]">{name}</p>
       <p className="flex-1/8 py-1 text-center">{overs}</p>
       <p className="flex-1/8 py-1 text-center">{runs}</p>

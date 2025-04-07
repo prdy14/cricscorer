@@ -9,7 +9,6 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   useEffect(() => {
-    console.log("hi");
     const token = localStorage.getItem("token");
     axios
       .post("/auth/validatetoken", { token: token })
