@@ -5,7 +5,7 @@ import { Link, Outlet } from "react-router-dom";
 
 function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white h-[100vh]">
+    <div className="min-h-screen bg-gradient-to-b from-green-50 to-white ">
       <NavBar />
       <Outlet />
     </div>

@@ -9,35 +9,41 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import InputUpdate from "./InputUpdate";
-import { Button } from "./button";
 
-function InputOut({ value, onClick }) {
+import InputUpdate from "./InputUpdate";
+
+function InputOut({ handelNonStrikerOut, handelStrikerOut, disabled }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <InputUpdate value="OUT" className=" bg-[#dc9b9b] text-black" />
+        <InputUpdate
+          value="OUT"
+          className=" bg-[#dc9b9b] text-black"
+          disabled={disabled}
+        />
       </DialogTrigger>
       <DialogContent className="max-w-[300px] items-center flex flex-col">
         <DialogHeader className="flex items-center">
           <DialogTitle>OUT</DialogTitle>
-          <DialogDescription>Select Out Type</DialogDescription>
+          <DialogDescription>who was out</DialogDescription>
         </DialogHeader>
-        <div className="grid grid-cols-4 w-full">
+        <div className="grid grid-cols-2 w-full">
           <DialogClose
             className="bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] rounded-sm border-2 border-[#426f51] w-[80%] p-1 text-white"
             onClick={() => {
-              onClick();
-              setRuns(0);
+              handelStrikerOut();
             }}
           >
-            Bowled
+            striker
           </DialogClose>
-          <div>caugth</div>
-          <div>runout</div>
-          <div>Lbw</div>
+          <DialogClose
+            className="bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] rounded-sm border-2 border-[#426f51] w-[80%] p-1 text-white"
+            onClick={() => {
+              handelNonStrikerOut();
+            }}
+          >
+            nonstriker
+          </DialogClose>
         </div>
       </DialogContent>
     </Dialog>

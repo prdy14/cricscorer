@@ -31,37 +31,30 @@ function AddTeam() {
   const addPlayerToTeam = async () => {
     if (!playerExist) {
       try {
-        console.log(team);
         const res = await axios.post("/auth/addPlayer", {
           username: username,
           email: email,
         });
 
         const player = res.data;
-        console.log(player);
+
         // Ensure setAddPlayer updates before using it
         setAddPlayer(player);
         const add = await axios.put(
           `/teams/addPlayer/${team.id}/${player.id}`,
           {}
         );
-        console.log(add.data);
 
         // Use a callback inside setPlayers to ensure it gets the latest state
         setPlayers((prevPlayers) => [...prevPlayers, player]);
 
-        console.log("Updated Players:", players); // Might still log old value due to async state updates
-      } catch (err) {
-        console.error("Error adding player:", err);
-      }
+        // Might still log old value due to async state updates
+      } catch (err) {}
     } else {
       const add = await axios.put(
         `/teams/addPlayer/${team.id}/${addPlayer.id}`,
         {}
       );
-      console.log(addPlayer.data);
-
-      console.log(add.data);
 
       setPlayers((prevPlayers) => [...prevPlayers, addPlayer]);
     }
@@ -78,24 +71,20 @@ function AddTeam() {
         playersId: [],
       });
       setTeam(response.data);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
   const findPlayer = async () => {
     try {
       const response = await axios.get(`/auth/getUser?email=${email}`);
       const player = response.data;
-      console.log(player);
+
       setSearched(true);
       if (player) {
         setPlayerExist(true);
         setAddPlayer(player);
       } else {
       }
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   };
   return (
     <div className="flex flex-col justify-center items-center sm:block ">

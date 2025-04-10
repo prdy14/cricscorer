@@ -19,6 +19,7 @@ function SelectStriker() {
       navigate(p + "/updateScore");
     }
   }, [striker]);
+  const arr = [1, 2];
 
   return (
     <div>
@@ -27,7 +28,12 @@ function SelectStriker() {
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-8 gap-2">
         {battingTeam?.players
-          .filter((player) => batters.indexOf(player.id) < 0)
+          ?.filter(
+            (player) =>
+              batters.some((batter) => {
+                return batter.playerId === player.id;
+              }) == false
+          )
           .map((player) => (
             <Card
               key={player.id + "kh"}

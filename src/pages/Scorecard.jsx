@@ -13,7 +13,8 @@ import BowlerPerformence from "../components/BowlerPerformence";
 
 export default function Scorecard() {
   const { innings1, innings2, matchDetails, teamA, teamB } = liveMatch();
-  console.log(innings1, teamA, teamB);
+  console.log(innings1);
+
   return (
     <div className="px-2 flex flex-col ml-auto mr-auto w-fill sm:w-[70%] max-w-[800px]">
       <Accordion collapsible className="w-full">
@@ -22,9 +23,9 @@ export default function Scorecard() {
             <div className="flex justify-between w-full">
               <div>{matchDetails.innings2 ? teamB?.name : teamA?.name}</div>
               <div>
-                {innings1?.score}-{innings1?.wickets} (
+                {innings1?.runs}-{innings1?.wickets} (
                 {innings1?.overs.length - 1}.
-                {innings1?.overs.find((ov) => !ov.completed).ballCount})
+                {innings1?.overs.find((ov) => !ov.completed)?.ballCount})
               </div>
             </div>
           </AccordionTrigger>
@@ -32,7 +33,6 @@ export default function Scorecard() {
             <div>
               <BatterTitle />
               {innings1?.batters?.map((striker, index) => {
-                console.log("hi");
                 return (
                   <BatterPerformance
                     runs={striker?.runs}
@@ -46,8 +46,9 @@ export default function Scorecard() {
                     }
                     name={striker?.name}
                     score={true}
-                    key={index}
+                    key={index + "batting"}
                     out={striker?.out}
+                    bowledBy={striker?.bowledBy}
                   />
                 );
               })}
@@ -55,7 +56,7 @@ export default function Scorecard() {
               <div>
                 total score is {innings1?.score}-{innings1?.wickets} (
                 {innings1?.overs.length - 1}.
-                {innings1?.overs.find((ov) => !ov.completed).ballCount})
+                {innings1?.overs.find((ov) => !ov.completed)?.ballCount})
               </div>
 
               <BowlerTitle />
@@ -67,6 +68,7 @@ export default function Scorecard() {
                     runs={bowler?.runs}
                     wickets={bowler?.wickets}
                     madien={bowler?.madiens}
+                    key={bowler?.id}
                     eco={
                       bowler?.overs != 0
                         ? (
@@ -104,7 +106,6 @@ export default function Scorecard() {
               <div>
                 <BatterTitle />
                 {innings2?.batters?.map((striker, index) => {
-                  console.log("hi");
                   return (
                     <BatterPerformance
                       runs={striker?.runs}
@@ -118,13 +119,13 @@ export default function Scorecard() {
                       }
                       name={striker?.name}
                       score={true}
-                      key={index}
+                      key={index + striker.id}
                       out={striker?.out}
                     />
                   );
                 })}
 
-                <div>
+                <div className="font-semibold">
                   total score is {innings2?.score}-{innings2?.wickets} (
                   {innings2?.overs.length - 1}.
                   {innings2?.overs.find((ov) => !ov.completed)?.ballCount})
@@ -139,6 +140,7 @@ export default function Scorecard() {
                       runs={bowler?.runs}
                       wickets={bowler?.wickets}
                       madien={bowler?.madiens}
+                      key={bowler.id}
                       eco={
                         bowler?.overs != 0
                           ? (

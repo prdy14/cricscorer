@@ -6,15 +6,15 @@ function Squards() {
   return (
     <div className="grid grid-cols-2 ml-auto mr-auto w-fill sm:w-[70%] max-w-[800px]">
       <div>
-        <div>{teamA.name}</div>
+        <div>{teamA?.name}</div>
         {teamA?.players.map((player) => {
-          return <div>{player.name}</div>;
+          return <div key={player.id}>{player?.name}</div>;
         })}
       </div>
       <div>
-        <div>{teamB.name}</div>
+        <div>{teamB?.name}</div>
         {teamB?.players.map((player) => {
-          return <div>{player.name}</div>;
+          return <div key={player.id}>{player?.name}</div>;
         })}
       </div>
     </div>

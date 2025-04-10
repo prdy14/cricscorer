@@ -5,11 +5,13 @@ import instance from "../config/axios";
 const UpdateMatchContext = createContext(undefined);
 
 export function UpdateMatchProvider({ children }) {
+  const [loading, setLoading] = useState(true);
   const location = useLocation();
   const path = useRef(location.pathname);
+  const [ballUpdate, setBallUpdated] = useState(false);
 
-  const [battingTeam, setBattingTeam] = useState(null);
-  const [bowlingTeam, setBowlingTeam] = useState(null);
+  const [battingTeam, setBattingTeam] = useState([]);
+  const [bowlingTeam, setBowlingTeam] = useState([]);
   const inningsId = useRef(null);
   const [striker, setStriker] = useState(null);
   const [nonStriker, setNonStriker] = useState(null);
@@ -49,8 +51,8 @@ export function UpdateMatchProvider({ children }) {
       } else {
         inningsData = (await instance.get(`/matches/${matchId}/innings2`)).data;
       }
-      console.log(inningsData);
-      setScore(inningsData.score);
+
+      setScore(inningsData.runs);
       const overs = inningsData.overs;
       setOver((prev) => {
         let c = 0;
@@ -78,37 +80,41 @@ export function UpdateMatchProvider({ children }) {
     };
 
     getDetails();
+    setLoading(false);
   }, [matchDetails.innings2]);
 
   useEffect(() => {
     const updateScore = async () => {
-      console.log(inningsId.current);
-      const updateInnings = await instance.post(`/matches/updateScore`, {
-        id: inningsId.current,
-        score: score,
-        wickets: wickets,
-      });
-      const updateStriker = await instance.post(
-        `/matches/updateBatter`,
-        striker
-      );
-      const updateNonStriker = await instance.post(
-        `/matches/updateBatter`,
-        nonStriker
-      );
-      if (bowler) {
-        const updateBowler = await instance.post(
-          `/matches/updateBowler`,
-          bowler
+      setBallUpdated(true);
+      if (striker && nonStriker && bowler) {
+        const updateInnings = await instance.post(`/matches/updateScore`, {
+          id: inningsId.current,
+          score: score,
+          wickets: wickets,
+        }); 
+        const updateStriker = await instance.post(
+          `/matches/updateBatter`,
+          striker
         );
-        console.log(updateBowler);
-        const res = await instance.post(`/matches/updatescore/addball`, {
-          id: overId,
-          ballNo: ballNo,
-          balls: balls,
-        });
+        const updateNonStriker = await instance.post(
+          `/matches/updateBatter`,
+          nonStriker
+        );
+        if (bowler) {
+          const updateBowler = await instance.post(
+            `/matches/updateBowler`,
+            bowler
+          );
+          const res = await instance.post(`/matches/updatescore/addball`, {
+            id: overId,
+            ballNo: ballNo,
+            balls: balls,
+          });
+        }
       }
+      setBallUpdated(false);
     };
+
     updateScore();
     const updateOver = async () => {
       const dat = await instance.put(`/matches/overcomplete/${overId}`);
@@ -116,7 +122,6 @@ export function UpdateMatchProvider({ children }) {
       changeStriker();
     };
     if (ballNo == 6) {
-      console.log("updateScoe");
       updateOver();
       setBallNo(0);
       setOver((prev) => prev + 1);
@@ -129,9 +134,8 @@ export function UpdateMatchProvider({ children }) {
       setMatchDetails((prev) => {
         return { ...prev, innings2: true, target: score };
       });
-      console.log(res.data);
     }
-    if ((matchDetails.innings2 && over == matchDetails.overs) || score) {
+    if (matchDetails.innings2 && over == matchDetails.overs) {
       if (score < matchDetails.target) {
         const res = instance.post("/matches/endmatch", {});
       }
@@ -143,6 +147,9 @@ export function UpdateMatchProvider({ children }) {
       `/matches/${inningsId.current}/setStriker`,
       { playerId: bat.playerId, name: bat.name }
     );
+    setBatters((prev) => {
+      return [...prev, srikerRes.data];
+    });
     setStriker(srikerRes.data);
   };
 
@@ -151,6 +158,9 @@ export function UpdateMatchProvider({ children }) {
       `/matches/${inningsId.current}/setnonStriker`,
       { playerId: nonBat.playerId, name: nonBat.name }
     );
+    setBatters((prev) => {
+      return [...prev, nonSrikerRes.data];
+    });
     setNonStriker(nonSrikerRes.data);
   };
   const handelSetBowler = async (bow) => {
@@ -210,6 +220,32 @@ export function UpdateMatchProvider({ children }) {
     setBallNo((prev) => prev + 1);
     addBall(val, r);
   };
+
+  const handelStrikerOut = async () => {
+    console.log(batters);
+    const res = await instance.patch(`/matches/out`, {
+      inningsId: inningsId.current,
+      batterId: striker.id,
+      bowlerId: bowler.id,
+    });
+    setWickets((prev) => prev + 1);
+    addBall("out", "W");
+    setBallNo((prev) => prev + 1);
+    setStriker(null);
+  };
+
+  const handelNonStrikerOut = async () => {
+    const res = await instance.patch(`/matches/out`, {
+      inningsId: inningsId.current,
+      batterId: nonStriker.id,
+      bowlerId: bowler.id,
+    });
+    setWickets((prev) => prev + 1);
+    addBall("out", "W");
+    setBallNo((prev) => prev + 1);
+    setNonStriker(null);
+  };
+
   const addWideRuns = (r) => {
     setScore((prev) => prev + 1 + +r);
     if (r % 2 == 1) {
@@ -276,6 +312,8 @@ export function UpdateMatchProvider({ children }) {
         setStriker,
         setNonStriker,
         setBowler,
+        loading,
+        ballUpdate,
         path,
         striker,
         nonStriker,
@@ -300,6 +338,8 @@ export function UpdateMatchProvider({ children }) {
         handelSetBowler,
         handelSetNonStriker,
         navigate,
+        handelNonStrikerOut,
+        handelStrikerOut,
       }}
     >
       {children}

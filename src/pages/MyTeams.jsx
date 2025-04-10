@@ -20,12 +20,9 @@ function MyTeams() {
       axios
         .get("/teams/teams")
         .then((result) => setTeams(result.data))
-        .catch((err) => {
-          console.log(err);
-        });
+        .catch((err) => {});
     };
     getTeams();
-    console.log(teams);
   }, []);
 
   const handleSelectTeam = (team) => {

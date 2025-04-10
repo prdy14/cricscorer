@@ -27,7 +27,7 @@ function LiveMatchLayout() {
   const path = location.pathname;
   return (
     <div className="">
-      <nav className="flex bg-[#426f51] sticky top-14 z-20">
+      <nav className="flex bg-[#426f51] sticky top-0 z-20">
         {tabs.map((tab, index) => (
           <Link
             to={tab.link}

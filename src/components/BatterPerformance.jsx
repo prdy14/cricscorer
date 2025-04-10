@@ -10,6 +10,7 @@ function BatterPerformance({
   className,
   out,
   score,
+  bowledBy,
 }) {
   return (
     <div className={`flex text-slate-800 items-center ${className}`}>
@@ -17,9 +18,16 @@ function BatterPerformance({
         <p className=" px-2  font-semibold text-[#22753e]">{name}</p>
 
         {score && (
-          <p className="text-xs px-2 text-black font-light">
-            {out ? "out" : "batting"}
-          </p>
+          <div className="text-xs px-2 text-black ">
+            {out ? (
+              <p>
+                <span className="font-semibold">b </span>
+                {bowledBy}
+              </p>
+            ) : (
+              "batting"
+            )}
+          </div>
         )}
       </div>
       <p className="flex-1/8 py-1 text-center">{runs}</p>

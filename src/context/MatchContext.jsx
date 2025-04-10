@@ -10,7 +10,6 @@ export function MatchProvider({ children }) {
 
   const handelInputChange = (e) => {
     const { name, value } = e.target;
-    console.log(formdata);
 
     setFormData((prev) => ({ ...prev, [name]: value }));
   };

@@ -6,6 +6,7 @@ import instance from "../config/axios";
 const LiveMatchContext = createContext(undefined);
 
 export function LiveMatchProvider({ children }) {
+  const [loading, setLoading] = useState(true);
   const { matchId } = useParams();
   const [teamA, setTeamA] = useState(null);
   const [teamB, setTeamB] = useState(null);
@@ -52,7 +53,7 @@ export function LiveMatchProvider({ children }) {
       } else {
         inningsData = inningsData1;
       }
-      setScore(inningsData.score);
+      setScore(inningsData.runs);
       const overs = inningsData.overs;
       setOver((prev) => {
         let c = 0;
@@ -76,6 +77,7 @@ export function LiveMatchProvider({ children }) {
       setBatters(inningsData.batters);
       setBowlers(inningsData.bowlers);
       getTeam(inningsData.battingTeamId, inningsData.bowlingTeamId);
+      setLoading(false);
     };
     getDetails();
   }, [matchDetails.innings2]);
@@ -97,6 +99,7 @@ export function LiveMatchProvider({ children }) {
         over,
         score,
         matchDetails,
+        loading,
       }}
     >
       {children}

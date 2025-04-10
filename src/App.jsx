@@ -21,7 +21,6 @@ import MyTeams from "./pages/MyTeams.jsx";
 import Home from "./pages/Home.jsx";
 import UpdateScore from "./pages/UpdateScore.jsx";
 import UpdateScoreLayout from "./pages/UpdateScoreLayout.jsx";
-import SelectPlayers from "./components/SelectPlayers.jsx";
 import SelectStriker from "./components/SelectStriker.jsx";
 import SelectNonStriker from "./components/SelectNonStriker.jsx";
 import SelectBowler from "./components/SelectBowler.jsx";

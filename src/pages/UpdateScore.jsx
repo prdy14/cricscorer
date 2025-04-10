@@ -27,51 +27,52 @@ import { useNavigate } from "react-router-dom";
 
 function UpdateScore() {
   const {
+    loading,
+    ballUpdate,
     battingTeam,
-    bowlingTeam,
     striker,
     nonStriker,
     bowler,
     balls,
     over,
     ballNo,
-    setOver,
     score,
     wickets,
-    batters,
-    started,
-    setStarted,
-    bowlers,
-    setBowlers,
-    matchDetails,
     handelRuns,
     addWideRuns,
     addNbRuns,
     addByes,
-    addBall,
-    setStriker,
-    setBowler,
-    setNonStriker,
-    setBatters,
     path,
+    handelNonStrikerOut,
+    handelStrikerOut,
   } = updateMatch();
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (loading) {
+      return;
+    }
     const rout = path.current.split("/");
     rout.pop();
     const p = rout.join("/");
 
-    if (!nonStriker) {
+    if (!nonStriker?.id) {
       navigate(p + "/selectnonstriker");
     }
-    if (!bowler) {
+    if (!bowler?.id) {
       navigate(p + "/selectbowler");
     }
-    if (!striker) {
+    if (!striker?.id) {
       navigate(p + "/selectstriker");
     }
-  });
+  }, []);
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -141,21 +142,29 @@ function UpdateScore() {
             })}
           </div>
         </div>
-        <div className="grid grid-cols-4 gap-0.5 mt-2">
-          <InputUpdate value={0} onClick={handelRuns} />
-          <InputUpdate value={1} onClick={handelRuns} />
-          <InputUpdate value={2} onClick={handelRuns} />
+        <div className={`grid grid-cols-4 gap-0.5 mt-2 `}>
+          <InputUpdate value={0} onClick={handelRuns} disabled={ballUpdate} />
+          <InputUpdate value={1} onClick={handelRuns} disabled={ballUpdate} />
+          <InputUpdate value={2} onClick={handelRuns} disabled={ballUpdate} />
 
-          <InputOut value={2} onClick={handelRuns} />
+          <InputOut
+            handelNonStrikerOut={handelNonStrikerOut}
+            handelStrikerOut={handelStrikerOut}
+            disabled={ballUpdate}
+          />
 
-          <InputUpdate value={3} onClick={handelRuns} />
-          <InputUpdate value={4} onClick={handelRuns} />
-          <InputUpdate value={6} onClick={handelRuns} />
-          <InputDialog value="Runs" onClick={handelRuns} />
-          <InputDialog value="Wd" onClick={addWideRuns} />
-          <InputDialog value="Nb" onClick={addNbRuns} />
-          <InputDialog value="Bye" onClick={addByes} />
-          <InputDialog value="Lb" onClick={addByes} />
+          <InputUpdate value={3} onClick={handelRuns} disabled={ballUpdate} />
+          <InputUpdate value={4} onClick={handelRuns} disabled={ballUpdate} />
+          <InputUpdate value={6} onClick={handelRuns} disabled={ballUpdate} />
+          <InputDialog
+            value="Runs"
+            onClick={handelRuns}
+            disabled={ballUpdate}
+          />
+          <InputDialog value="Wd" onClick={addWideRuns} disabled={ballUpdate} />
+          <InputDialog value="Nb" onClick={addNbRuns} disabled={ballUpdate} />
+          <InputDialog value="Bye" onClick={addByes} disabled={ballUpdate} />
+          <InputDialog value="Lb" onClick={addByes} disabled={ballUpdate} />
         </div>
       </div>
     </>

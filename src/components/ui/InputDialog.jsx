@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label";
 import InputUpdate from "./InputUpdate";
 import { useState } from "react";
 
-export default function InputDialog({ value, onClick }) {
+export default function InputDialog({ value, onClick, disabled }) {
   const [runs, setRuns] = useState(0);
   const handelChange = (e) => {
     console.log(runs);
@@ -22,7 +22,11 @@ export default function InputDialog({ value, onClick }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <InputUpdate value={value} className="bg-[#45815951] text-black" />
+        <InputUpdate
+          value={value}
+          className="bg-[#45815951] text-black"
+          disabled={disabled}
+        />
       </DialogTrigger>
       <DialogContent className="max-w-[300px] items-center flex flex-col">
         <DialogHeader className="flex items-center">

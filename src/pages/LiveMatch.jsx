@@ -21,7 +21,16 @@ function LiveMatch() {
     nonStriker,
     bowler,
     balls,
+    loading,
   } = liveMatch();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+      </div>
+    );
+  }
   return (
     <div className="md:ml-[20%] md:mr-[20%]">
       <div className="flex  items-center p-2  justify-between  bg-[#426f51] text-slate-200 ">
@@ -46,7 +55,7 @@ function LiveMatch() {
               ? 0
               : ((striker?.runs * 100) / striker?.balls).toFixed(1)
           }
-          name={striker?.name + "*"}
+          name={striker?.name + (striker?.striker ? "*" : "")}
         />
         <BatterPerformance
           runs={nonStriker?.runs}
@@ -58,7 +67,7 @@ function LiveMatch() {
               ? 0
               : ((nonStriker?.runs * 100) / nonStriker?.balls).toFixed(1)
           }
-          name={nonStriker?.name}
+          name={nonStriker?.name + (nonStriker?.striker ? "*" : "")}
         />
         <BowlerTitle />
         <BowlerPerformence

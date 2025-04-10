@@ -29,9 +29,11 @@ function SelectNonStriker() {
       </h3>
       <div className="grid grid-cols-2 gap-2">
         {battingTeam?.players
-          .filter(
+          ?.filter(
             (player) =>
-              batters.indexOf(player.id) < 0 && striker?.playerId != player.id
+              batters.some((batter) => {
+                return batter.playerId === player.id;
+              }) == false
           )
           .map((player) => (
             <Card

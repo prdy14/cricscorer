@@ -2,9 +2,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const instance = axios.create({
-  baseURL:
-    "http://cricsorer-env.eba-7hdmp3pp.us-east-1.elasticbeanstalk.com/api/",
-
+  baseURL: "https://cricscorer-api-1.onrender.com/api/",
   // baseURL: "http://localhost:8081/api/",
 });
 
