@@ -54,7 +54,7 @@ export default function Scorecard() {
               })}
 
               <div>
-                total score is {innings1?.score}-{innings1?.wickets} (
+                total score is {innings1?.runs}-{innings1?.wickets} (
                 {innings1?.overs.length - 1}.
                 {innings1?.overs.find((ov) => !ov.completed)?.ballCount})
               </div>

@@ -24,7 +24,7 @@ function SelectBowler() {
         Select Bowler {bowlingTeam?.name}
       </h3>
       <div className="grid grid-cols-2 gap-2">
-        {bowlingTeam?.players.map((player, index) => (
+        {bowlingTeam?.players?.map((player, index) => (
           <Card
             key={index + "df"}
             className={`p-2 text-center shadow-md cursor-pointer ${
@@ -32,7 +32,6 @@ function SelectBowler() {
             }`}
             onClick={() =>
               setBow((prev) => {
-                console.log("hi");
                 return { ...player, playerId: player.id };
               })
             }

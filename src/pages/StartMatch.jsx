@@ -19,6 +19,7 @@ import { Venus } from "lucide-react";
 
 function StartMatch() {
   const { formdata, handelInputChange } = createMatch();
+  const [error, setError] = useState(false);
 
   const navigate = useNavigate();
 
@@ -27,29 +28,39 @@ function StartMatch() {
   };
 
   const staryMatch = async (e) => {
-    const res = await axios.post("/matches/creatematch", {
-      teams: [
-        {
-          id: formdata.teamA.teamId,
-          name: formdata.teamA.teamName,
-          player: formdata.teamA.players,
-        },
-        {
-          id: formdata.teamB.teamId,
-          name: formdata.teamB.teamName,
-          players: formdata.teamB.players,
-        },
-      ],
-      venue: formdata.venue,
-      optTo: formdata.optto,
-      overs: +formdata.overs,
-      tossWon:
-        formdata.toss == "teamA"
-          ? formdata.teamA.teamId
-          : formdata.teamB.teamId,
-    });
+    if (
+      formdata.teamA &&
+      formdata.teamB &&
+      formdata.optto &&
+      formdata.overs &&
+      formdata.overs
+    ) {
+      const res = await axios.post("/matches/creatematch", {
+        teams: [
+          {
+            id: formdata.teamA.teamId,
+            name: formdata.teamA.teamName,
+            player: formdata.teamA.players,
+          },
+          {
+            id: formdata.teamB.teamId,
+            name: formdata.teamB.teamName,
+            players: formdata.teamB.players,
+          },
+        ],
+        venue: formdata.venue,
+        optTo: formdata.optto,
+        overs: +formdata.overs,
+        tossWon:
+          formdata.toss == "teamA"
+            ? formdata.teamA.teamId
+            : formdata.teamB.teamId,
+      });
 
-    navigate(`/updatematch/${res.data.id}/updatescore`);
+      navigate(`/updatematch/${res.data.id}/updatescore`);
+    } else {
+      setError(true);
+    }
   };
   return (
     <div className="md:mx-60">
@@ -105,7 +116,7 @@ function StartMatch() {
           action={staryMatch}
           className="flex justify-center flex-col items-center "
         >
-          <div className="flex flex-col min-w-[350px] ">
+          <div className="flex flex-col min-w-[350px] mb-2">
             <div className="grid  gap-1.5 max-w-[350px]">
               <Label htmlFor="overs" className="pl-3 ">
                 Overs
@@ -177,8 +188,9 @@ function StartMatch() {
               </div>
             </div>
           </div>
+          {error && <p className=" text-red-600">please fill all the feilds</p>}
           <Button
-            className="w-60 mt-6 bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] border-2 border-[#426f51]"
+            className="w-60 mt-3 bg-[#426f51] hover:text-[#426f51] hover:bg-white hover:border-[#426f51] border-2 border-[#426f51]"
             type="submit"
           >
             Start Match

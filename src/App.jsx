@@ -40,13 +40,13 @@ function App() {
 
           <Route path="/" element={<LandingPage />}>
             <Route index element={<Home />} />
-            <Route path="/liveMatches" element={<LiveMatches />} />
-            <Route path="/liveMatch/:matchId" element={<LiveMatchLayout />}>
-              <Route path="live" element={<LiveMatch />} />
-              <Route path="scorecard" element={<Scorecard />} />
-              <Route path="squard" element={<Squards />} />
-              <Route path="overs" element={<Overs />} />
-            </Route>
+          </Route>
+          <Route path="/liveMatches" element={<LiveMatches />} />
+          <Route path="/liveMatch/:matchId" element={<LiveMatchLayout />}>
+            <Route path="live" element={<LiveMatch />} />
+            <Route path="scorecard" element={<Scorecard />} />
+            <Route path="squard" element={<Squards />} />
+            <Route path="overs" element={<Overs />} />
           </Route>
           <Route element={<ProtectedRoute />}>
             <Route path="/startmatch" element={<StartMatchOutlet />}>

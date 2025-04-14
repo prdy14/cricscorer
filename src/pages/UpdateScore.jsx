@@ -49,30 +49,20 @@ function UpdateScore() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (loading) {
-      return;
-    }
     const rout = path.current.split("/");
     rout.pop();
     const p = rout.join("/");
 
-    if (!nonStriker?.id) {
+    if (!nonStriker) {
       navigate(p + "/selectnonstriker");
     }
-    if (!bowler?.id) {
+    if (!bowler) {
       navigate(p + "/selectbowler");
     }
-    if (!striker?.id) {
+    if (!striker) {
       navigate(p + "/selectstriker");
     }
-  }, []);
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
-      </div>
-    );
-  }
+  }, [striker, nonStriker, bowler]);
 
   return (
     <>

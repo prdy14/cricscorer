@@ -7,9 +7,13 @@ function Ball({ value, runs }) {
         <div
           className={`flex justify-center items-center h-10 min-w-10 w-10 m-1 rounded-full  mx-1 bg-[#426f511c] text-xs ${value}`}
         >
-          <p>{`${
-            value == "wd" || value == "nb" || value == "lb" ? value + "+" : ""
-          }${runs} `}</p>
+          {value == "out" ? (
+            <p>W</p>
+          ) : (
+            <p>{`${
+              value == "wd" || value == "nb" || value == "lb" ? value + "+" : ""
+            }${runs} `}</p>
+          )}
         </div>
       </div>
     </>

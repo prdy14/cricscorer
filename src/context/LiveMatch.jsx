@@ -69,7 +69,9 @@ export function LiveMatchProvider({ children }) {
       setWickets(inningsData.wickets);
 
       inningsId.current = inningsData.id;
-      setStriker(inningsData.batters.find((bat) => bat.striker) || null);
+      setStriker(
+        inningsData.batters.find((bat) => !bat.out && bat.striker) || null
+      );
       setNonStriker(
         inningsData.batters.find((bow) => !bow.out && !bow.striker) || null
       );
