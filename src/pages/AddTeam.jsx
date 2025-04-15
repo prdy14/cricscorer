@@ -31,7 +31,7 @@ function AddTeam() {
   const addPlayerToTeam = async () => {
     if (!playerExist) {
       try {
-        const res = await axios.post("/auth/addPlayer", {
+        const res = await axios.post("/player/addPlayer", {
           username: username,
           email: email,
         });
@@ -46,11 +46,13 @@ function AddTeam() {
         );
 
         // Use a callback inside setPlayers to ensure it gets the latest state
+        console.log(players);
         setPlayers((prevPlayers) => [...prevPlayers, player]);
 
         // Might still log old value due to async state updates
       } catch (err) {}
     } else {
+      console.log(addPlayer.id);
       const add = await axios.put(
         `/teams/addPlayer/${team.id}/${addPlayer.id}`,
         {}
@@ -75,7 +77,7 @@ function AddTeam() {
   };
   const findPlayer = async () => {
     try {
-      const response = await axios.get(`/auth/getUser?email=${email}`);
+      const response = await axios.get(`/player/getplayer?email=${email}`);
       const player = response.data;
 
       setSearched(true);

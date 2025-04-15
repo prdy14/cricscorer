@@ -8,20 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    axios
-      .post("/auth/validatetoken", { token: token })
-      .then((res) => res.data)
-      .then((res) => {
-        setUser(res.email);
-        setLoading(false);
-      })
-      .catch((e) => {
-        setUser("");
-        setLoading(false);
-      });
-  }, [user]);
 
   const login = async (email, password) => {
     try {
@@ -32,6 +18,7 @@ export const AuthProvider = ({ children }) => {
       setUser(username);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+      console.log(response.data);
 
       setLoading(false);
     } catch (error) {
@@ -54,6 +41,7 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
       });
+      console.log(res.data);
     } catch (error) {
       throw error;
     }
