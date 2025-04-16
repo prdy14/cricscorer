@@ -18,7 +18,7 @@ function MyTeams() {
   useEffect(() => {
     const getTeams = () => {
       axios
-        .get("/teams/teams")
+        .get("/teams/teams", {})
         .then((result) => setTeams(result.data))
         .catch((err) => {});
     };

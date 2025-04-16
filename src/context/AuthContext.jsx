@@ -14,15 +14,17 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post("/auth/login", { email, password });
 
       const { token, username } = response.data;
+
       localStorage.setItem("token", token);
       setUser(username);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      console.log(response.data);
+      console.log(response);
 
       setLoading(false);
     } catch (error) {
       setLoading(false);
+
       throw error;
     }
   };
