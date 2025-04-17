@@ -1,4 +1,8 @@
 {
-  "source": "/api/(.*)",
-  "destination": "https://cricscorer-api-1.onrender.com/api/auth/signup"
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "https://cricscorer-api-1.onrender.com/api/auth/signup"
+    }
+  ]
 }
