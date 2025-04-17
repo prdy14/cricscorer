@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Create axios instance with base URL
 const instance = axios.create({
-  baseURL: "/api/",
+  baseURL: "https://cricscorer-api-1.onrender.com/api/",
   // baseURL: "http://localhost:8081/api/",
   withCredentials: true,
 });
