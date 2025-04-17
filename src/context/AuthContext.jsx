@@ -11,7 +11,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await axios.post("/auth/login", { email, password });
+      const response = await axios.post("/api/auth/login", { email, password });
 
       const { token, username } = response.data;
 
@@ -19,8 +19,6 @@ export const AuthProvider = ({ children }) => {
       setUser(username);
 
       axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-      console.log(response);
-
       setLoading(false);
     } catch (error) {
       setLoading(false);
@@ -38,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const signup = async (username, email, password) => {
     try {
-      const res = await axios.post("/auth/signup", {
+      const res = await axios.post("/api/auth/signup", {
         username,
         email,
         password,
