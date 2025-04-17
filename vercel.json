@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://cricscorer-api-1.onrender.com/api/auth/signup"
+      "destination": "https://cricscorer-api-1.onrender.com/api/$1"
     }
   ]
 }
